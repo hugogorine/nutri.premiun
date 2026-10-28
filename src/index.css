@@ -1,0 +1,164 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Tokens do projeto (obrigatórios no brief). Tudo no site sai daqui. */
+:root {
+  --bg: #0a0f0b;
+  --surface: #131b16;
+  --line: #22302a;
+  --emerald: #2f7a57;
+  --mint: #8fd9a8;
+  --ink: #edefea;
+  --ink-2: #a3afa6;
+
+  /* Variáveis do shadcn apontando para os tokens */
+  --background: var(--bg);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--mint);
+  --primary-foreground: var(--bg);
+  --secondary: var(--surface);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface);
+  --muted-foreground: var(--ink-2);
+  --accent: var(--surface);
+  --accent-foreground: var(--ink);
+  --destructive: #e5806b;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--mint);
+  --radius: 0.875rem;
+}
+
+@theme inline {
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-serif);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-line: var(--line);
+  --color-emerald: var(--emerald);
+  --color-mint: var(--mint);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    background: var(--bg);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection {
+    background: var(--mint);
+    color: var(--bg);
+  }
+  :focus-visible {
+    outline: 2px solid var(--mint);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  .spotlight-card {
+    --spot-x: 50%;
+    --spot-y: 0%;
+    --spot-on: 0;
+  }
+  .spotlight-card::before,
+  .spotlight-card::after {
+    content: "";
+    position: absolute;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: var(--spot-on);
+    transition: opacity 400ms ease;
+  }
+  /* Holofote no fundo */
+  .spotlight-card::before {
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(
+      var(--spot-size) circle at var(--spot-x) var(--spot-y),
+      color-mix(in srgb, var(--spot-color) 9%, transparent),
+      transparent 70%
+    );
+  }
+  /* Borda que acende perto do cursor */
+  .spotlight-card::after {
+    inset: -1px;
+    padding: 1px;
+    background: radial-gradient(
+      calc(var(--spot-size) * 0.75) circle at var(--spot-x) var(--spot-y),
+      color-mix(in srgb, var(--spot-color) 70%, transparent),
+      transparent 70%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .spotlight-card::before,
+    .spotlight-card::after {
+      display: none;
+    }
+  }
+}
+
+@layer utilities {
+  /* Rótulo das seções: uma linha fina e texto pequeno, sem caixa-alta com pontinho */
+  .kicker {
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-2);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
